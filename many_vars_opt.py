@@ -2,6 +2,7 @@ import dimod
 import networkx as nx
 import random
 import hybrid
+import time
 #import dwave.inspector
 
 #graph = nx.barabasi_albert_graph(100, 3, seed=1)  # Build a quasi-random graph
@@ -38,13 +39,16 @@ iteration = hybrid.RacingBranches(
    subproblem | qpu_sampler
 ) | hybrid.ArgMin() | hybrid.TrackMin(output=True)
 
-workflow = hybrid.LoopUntilNoImprovement(iteration, convergence=3)
+workflow = hybrid.LoopUntilNoImprovement(iteration, convergence=5)
 
+start_t = time.perf_counter()
 # Convert to dimod sampler and run workflow
 result = hybrid.HybridSampler(workflow).sample(bqm)
 
+elapsed_t = time.perf_counter() - start_t
 # show execution profile
 #hybrid.profiling.print_counters(workflow)
 
 print("Solution: sample={}".format(result.first)) # doctest: +SKIP
 #dwave.inspector.show(result)
+print("Elapsed time: {}".format(elapsed_t))
