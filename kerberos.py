@@ -11,10 +11,10 @@ def merge_substates(_, substates):
 # Construct a problem
 #bqm = dimod.BinaryQuadraticModel({}, {'ab': 1, 'bc': -1, 'ca': 1}, 0, dimod.SPIN)
 
-with open('bqp100_01.qubo') as problem:
+with open('bqp1000_01.qubo') as problem:
    bqm = dimod.BinaryQuadraticModel.from_coo(problem)
 
-subproblem_size = 25
+subproblem_size = 100
 
 print("BQM size: {}, subproblem size: {}".format(len(bqm), subproblem_size))
 # Classical solvers
@@ -22,7 +22,8 @@ print("BQM size: {}, subproblem size: {}".format(len(bqm), subproblem_size))
 #subproblem = hybrid.EnergyImpactDecomposer(size=1024, rolling_history=0.15, traversal="bfs")
 # Parallel subproblem
 subproblem = hybrid.Unwind(
-    hybrid.EnergyImpactDecomposer(size=subproblem_size, rolling_history=0.15, traversal="bfs")
+    #hybrid.EnergyImpactDecomposer(size=subproblem_size, rolling_history=0.15, traversal="bfs")
+    hybrid.EnergyImpactDecomposer(size=subproblem_size, rolling_history=0.1)
 )
 
 # QPU
@@ -44,7 +45,7 @@ subsampler = hybrid.Map(
 
 #iteration = hybrid.RacingBranches(
 iteration = hybrid.Race(
-    #hybrid.InterruptableTabuSampler(),
+    hybrid.InterruptableTabuSampler(),
     #hybrid.SimulatedAnnealingProblemSampler(),
      subproblem | subsampler
  ) | hybrid.ArgMin()
