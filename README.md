@@ -1,2 +1,2 @@
 # dwave-first
-Tutorials of using D-wave systems.
+Tutorials of using the D-Wave quantum computing systems.
